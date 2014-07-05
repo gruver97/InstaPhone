@@ -1,12 +1,7 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Net;
 using System.Windows;
-using System.Windows.Controls;
 using System.Windows.Navigation;
 using Microsoft.Phone.Controls;
-using Microsoft.Phone.Shell;
 
 namespace InstaPhone.Views
 {
@@ -20,11 +15,9 @@ namespace InstaPhone.Views
         private void WebBrowser_OnNavigating(object sender, NavigatingEventArgs e)
         {
             var instagramClient = new InstagramHttpClient();
-            if (instagramClient.ParseAuthResult(e.Uri))
-            {
-                e.Cancel = true;
-                this.NavigationService.Navigate(new Uri("/Views/PhotoPage.xaml", UriKind.Relative));
-            }
+            if (!instagramClient.ParseAuthResult(e.Uri)) return;
+            e.Cancel = true;
+            NavigationService.Navigate(new Uri("/Views/PhotoPage.xaml", UriKind.Relative));
         }
 
         private void WebBrowser_OnNavigationFailed(object sender, NavigationFailedEventArgs e)

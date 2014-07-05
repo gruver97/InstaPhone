@@ -1,32 +1,54 @@
 ﻿using System;
 using System.Net.Http;
+using System.Net.Http.Headers;
+using System.Threading.Tasks;
 using InstaPhone.Resources;
 
 namespace InstaPhone
 {
     public class InstagramHttpClient : HttpClient, IInstagramClient
     {
-        private const string UriPattern =
-            "https://instagram.com/oauth/authorize/?client_id={0}&redirect_uri={1}&response_type=token";
+        private static readonly string ClientId = AppResources.ClientId;
 
-        private static string _clientId;
-        private static Uri _responseUri;
+        private static readonly string ResponseUri = AppResources.RedirectUrl;
+
+        private string _accessToken;
 
         public InstagramHttpClient()
         {
-            _clientId = AppResources.ClientId;
-            _responseUri = new Uri(AppResources.RedirectUrl);
+            _accessToken = string.Empty;
         }
 
         public static Uri AuthUri
         {
-            get { return new Uri(string.Format(UriPattern, _clientId, _responseUri)); }
+            get { return new Uri(string.Format(AppResources.AuthUrl, ClientId, ResponseUri)); }
         }
 
         public bool ParseAuthResult(Uri authResult)
         {
             if (authResult == null) return false;
-            return authResult.Fragment.Contains("access_token");
+            if (authResult.Fragment.Contains("access_token"))
+            {
+                _accessToken = authResult.Fragment.Remove(0, "access_token".Length);
+                return true;
+            }
+            return false;
+        }
+
+        public async Task GetPopularPhotosAsync()
+        {
+            DefaultRequestHeaders.Accept.Clear();
+            DefaultRequestHeaders.Accept.Add(new MediaTypeWithQualityHeaderValue("application/json"));
+            HttpResponseMessage response =
+                await GetAsync(new Uri(string.Format(AppResources.PopularMediaUrl, ClientId)));
+            if (response.IsSuccessStatusCode)
+            {
+                //string sitesJsonString = await response.Content.ReadAsStringAsync();
+                //var jobject = JObject.Parse(sitesJsonString)["value"];
+                //var siteList = JsonConvert.DeserializeObject<List<Site>>(jobject.ToString());
+                //return siteList;
+            }
+            ;
         }
     }
 }

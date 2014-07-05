@@ -1,7 +1,5 @@
 ﻿using System;
-using System.Windows.Navigation;
 using GalaSoft.MvvmLight;
-using GalaSoft.MvvmLight.Command;
 
 namespace InstaPhone.ViewModel
 {

@@ -88,11 +88,29 @@ namespace InstaPhone.Resources {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to https://instagram.com/oauth/authorize/?client_id={0}&amp;redirect_uri={1}&amp;response_type=token.
+        /// </summary>
+        public static string AuthUrl {
+            get {
+                return ResourceManager.GetString("AuthUrl", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to 2220fd0b2b9542a6b6483af14302077d.
         /// </summary>
         public static string ClientId {
             get {
                 return ResourceManager.GetString("ClientId", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to https://api.instagram.com/v1/media/popular?clientId={0}.
+        /// </summary>
+        public static string PopularMediaUrl {
+            get {
+                return ResourceManager.GetString("PopularMediaUrl", resourceCulture);
             }
         }
         

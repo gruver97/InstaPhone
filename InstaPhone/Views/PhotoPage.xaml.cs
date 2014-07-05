@@ -16,5 +16,11 @@ namespace InstaPhone.Views
         {
             InitializeComponent();
         }
+
+        protected async override void OnNavigatedTo(NavigationEventArgs e)
+        {
+            var client = new InstagramHttpClient();
+            await client.GetPopularPhotosAsync();
+        }
     }
 }
