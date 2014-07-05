@@ -1,31 +1,32 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
 using System.Net.Http;
-using System.Text;
-using System.Threading.Tasks;
+using InstaPhone.Resources;
 
 namespace InstaPhone
 {
-    public class InstagramHttpClient:HttpClient, IInstagramClient
+    public class InstagramHttpClient : HttpClient, IInstagramClient
     {
-        private readonly string _clientId;
-        private readonly Uri _responseUri;
+        private const string UriPattern =
+            "https://instagram.com/oauth/authorize/?client_id={0}&redirect_uri={1}&response_type=token";
 
-        public InstagramHttpClient(string clientId, Uri responseUri)
+        private static string _clientId;
+        private static Uri _responseUri;
+
+        public InstagramHttpClient()
         {
-            _clientId = clientId;
-            _responseUri = responseUri;
+            _clientId = AppResources.ClientId;
+            _responseUri = new Uri(AppResources.RedirectUrl);
         }
 
-        public async Task<bool> Login()
+        public static Uri AuthUri
         {
-            return false;
+            get { return new Uri(string.Format(UriPattern, _clientId, _responseUri)); }
         }
 
-        public Task Logout()
+        public bool ParseAuthResult(Uri authResult)
         {
-            throw new NotImplementedException();
+            if (authResult == null) return false;
+            return authResult.Fragment.Contains("access_token");
         }
     }
 }

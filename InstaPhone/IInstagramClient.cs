@@ -1,10 +1,9 @@
-﻿using System.Threading.Tasks;
+﻿using System;
 
 namespace InstaPhone
 {
     public interface IInstagramClient
     {
-        Task<bool> Login();
-        Task Logout();
+        bool ParseAuthResult(Uri authResult);
     }
 }

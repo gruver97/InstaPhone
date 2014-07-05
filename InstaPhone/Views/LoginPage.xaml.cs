@@ -19,7 +19,8 @@ namespace InstaPhone.Views
 
         private void WebBrowser_OnNavigating(object sender, NavigatingEventArgs e)
         {
-            if (e.Uri.Fragment.Contains("access_token"))
+            var instagramClient = new InstagramHttpClient();
+            if (instagramClient.ParseAuthResult(e.Uri))
             {
                 e.Cancel = true;
                 this.NavigationService.Navigate(new Uri("/Views/PhotoPage.xaml", UriKind.Relative));
