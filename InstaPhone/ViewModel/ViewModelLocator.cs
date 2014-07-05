@@ -44,10 +44,14 @@ namespace InstaPhone.ViewModel
             ////    // Create run time view services and models
             ////    SimpleIoc.Default.Register<IDataService, DataService>();
             ////}
-        https://instagram.com/oauth/authorize/?client_id=2220fd0b2b9542a6b6483af14302077d&redirect_uri=http://localhost&response_type=token#
-            SimpleIoc.Default.Register<MainViewModel>();
+        //https://instagram.com/oauth/authorize/?client_id=2220fd0b2b9542a6b6483af14302077d&redirect_uri=http://localhost&response_type=token#
+            SimpleIoc.Default.Register<AuthViewModel>();
         }
-        
+
+        public AuthViewModel AuthViewModel {
+            get { return _container.Resolve<AuthViewModel>(); }
+        }
+
         public static void Cleanup()
         {
             // TODO Clear the ViewModels
