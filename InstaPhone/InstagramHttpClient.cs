@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 using System.Net.Http;
 using System.Net.Http.Headers;
@@ -56,19 +57,19 @@ namespace InstaPhone
             return null;
         }
 
-        public async Task<byte[]> DownloadImage(Uri imageUri)
+        public async Task<Stream> DownloadImage(Uri imageUri)
         {
             if (imageUri == null) throw new ArgumentNullException("imageUri");
             CancelPendingRequests();
-            MaxResponseContentBufferSize = 256000;
+            MaxResponseContentBufferSize = 5242880;
             DefaultRequestHeaders.Clear();
             DefaultRequestHeaders.Add("user-agent", "Mozilla/5.0 (compatible; MSIE 10.0; Windows NT 6.2; WOW64; Trident/6.0)");
             HttpResponseMessage response =
                 await GetAsync(imageUri);
             if (response.IsSuccessStatusCode)
             {
-                var mediaJsonString = await response.Content.ReadAsStreamAsync();
-                return null;
+                var photoStream = await response.Content.ReadAsStreamAsync();
+                return photoStream;
             }
             return null;
         }

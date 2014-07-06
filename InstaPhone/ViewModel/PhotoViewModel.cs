@@ -1,8 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
-using System.Linq;
-using System.Text;
+using System.IO;
 using System.Threading.Tasks;
 using System.Windows;
 using GalaSoft.MvvmLight;
@@ -11,44 +10,56 @@ using InstaPhone.Model;
 
 namespace InstaPhone.ViewModel
 {
-    public class PhotoViewModel:ViewModelBase
+    public class PhotoViewModel : ViewModelBase
     {
-        private IInstagramClient _instagramClient;
         private const int PhotoCount = 4;
+
         public PhotoViewModel()
         {
-            _instagramClient = new InstagramHttpClient();
-            ViewLoadedCommand = new RelayCommand<RoutedEventArgs>(GetMostPopularPhotos);
+            ViewLoadedCommand = new RelayCommand<RoutedEventArgs>(ViewLoadedCommandExecute);
             PopularMedia = new ObservableCollection<PopularMedia>();
         }
 
         public ObservableCollection<PopularMedia> PopularMedia { get; set; }
-        private async void GetMostPopularPhotos(RoutedEventArgs e)
+
+        public RelayCommand<RoutedEventArgs> ViewLoadedCommand { get; set; }
+
+        private async Task<Stream> DownloadImage(Uri imageUri)
+        {
+            var client = new InstagramHttpClient();
+            return await client.DownloadImage(imageUri);
+        }
+
+        private async Task GetMostPopularPhotos()
         {
             try
             {
-                var popularMedia = await _instagramClient.GetPopularPhotosAsync(PhotoCount);
+                var instagramClient = new InstagramHttpClient();
+                IEnumerable<PopularMedia> popularMedia = await instagramClient.GetPopularPhotosAsync(PhotoCount);
                 if (popularMedia != null)
                 {
                     PopularMedia.Clear();
-                    foreach (var media in popularMedia)
+                    foreach (PopularMedia media in popularMedia)
                     {
-                        await DownloadImage(media.InstagramImages.LowResolution.Uri);
+                        media.InstagramImages.LowResolution.SetImage(
+                            await DownloadImage(media.InstagramImages.LowResolution.Uri));
                         PopularMedia.Add(media);
                     }
                 }
             }
             catch (Exception exception)
             {
-                
             }
         }
 
-        private async Task DownloadImage(Uri imageUri)
+        public async Task RefreshPopular()
         {
-            await _instagramClient.DownloadImage(imageUri);
+            await GetMostPopularPhotos();
         }
 
-        public RelayCommand<RoutedEventArgs> ViewLoadedCommand { get; set; }
+        private async void ViewLoadedCommandExecute(RoutedEventArgs eventArgs)
+        {
+            await GetMostPopularPhotos();
+        }
     }
 }

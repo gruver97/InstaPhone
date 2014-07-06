@@ -21,16 +21,27 @@
             <i:InvokeCommandAction Command="{Binding Path=ViewLoadedCommand, Mode=TwoWay}" />
         </i:EventTrigger>
     </i:Interaction.Triggers>
+    <phone:PhoneApplicationPage.ApplicationBar>
+        <shell:ApplicationBar IsMenuEnabled="True" IsVisible="True">
+            <shell:ApplicationBarIconButton IconUri="Refresh" Text="Обновить" Click="ApplicationBarIconButton_OnClick" />
+            <shell:ApplicationBarIconButton IconUri="Refresh"
+                                            IsEnabled="False"
+                                            Text="Коллаж" />
+        </shell:ApplicationBar>
+    </phone:PhoneApplicationPage.ApplicationBar>
     <!--  LayoutRoot contains the root grid where all other page content is placed  -->
     <Grid x:Name="LayoutRoot">
         <phone:Pivot>
             <phone:PivotItem Header="Популярные">
-                <ListBox ItemsSource="{Binding Path=PopularMedia}">
+                <ListBox HorizontalAlignment="Center" ItemsSource="{Binding Path=PopularMedia}">
                     <ListBox.ItemTemplate>
                         <DataTemplate>
                             <StackPanel>
-                                <TextBlock Text="{Binding}" />
-                                <Image Source="{Binding Path=Image}" />
+                                <Image Width="306"
+                                       Height="306"
+                                       Margin="10"
+                                       Source="{Binding Path=InstagramImages.LowResolution.Image}"
+                                       Stretch="UniformToFill" />
                             </StackPanel>
                         </DataTemplate>
                     </ListBox.ItemTemplate>

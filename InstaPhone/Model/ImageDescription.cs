@@ -18,11 +18,11 @@ namespace InstaPhone.Model
 
         public BitmapImage Image { get; set; }
 
-        public void SetImage(byte[] bytes)
+        public void SetImage(Stream stream)
         {
-            var memoryStream = new MemoryStream(bytes);
-            var bitmapImage = new BitmapImage();
-            bitmapImage.SetSource(memoryStream);
+            var bitmapSource = new BitmapImage();
+            bitmapSource.SetSource(stream);
+            Image = bitmapSource;
         }
     }
 }

@@ -5,7 +5,7 @@ namespace InstaPhone.Model
 {
     public class InstagramImage
     {
-        [JsonProperty("standard_resolution")]
+        [JsonProperty("low_resolution")]
         public ImageDescription LowResolution { get; set; }
     }
 }
