@@ -30,6 +30,7 @@
                         <DataTemplate>
                             <StackPanel>
                                 <TextBlock Text="{Binding}" />
+                                <Image Source="{Binding Path=Image}" />
                             </StackPanel>
                         </DataTemplate>
                     </ListBox.ItemTemplate>

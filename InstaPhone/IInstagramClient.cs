@@ -9,5 +9,7 @@ namespace InstaPhone
     {
         bool ParseAuthResult(Uri authResult);
         Task<IEnumerable<PopularMedia>> GetPopularPhotosAsync(int count);
+
+        Task<byte[]> DownloadImage(Uri imageUri);
     }
 }

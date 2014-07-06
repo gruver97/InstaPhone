@@ -55,5 +55,22 @@ namespace InstaPhone
             }
             return null;
         }
+
+        public async Task<byte[]> DownloadImage(Uri imageUri)
+        {
+            if (imageUri == null) throw new ArgumentNullException("imageUri");
+            CancelPendingRequests();
+            MaxResponseContentBufferSize = 256000;
+            DefaultRequestHeaders.Clear();
+            DefaultRequestHeaders.Add("user-agent", "Mozilla/5.0 (compatible; MSIE 10.0; Windows NT 6.2; WOW64; Trident/6.0)");
+            HttpResponseMessage response =
+                await GetAsync(imageUri);
+            if (response.IsSuccessStatusCode)
+            {
+                var mediaJsonString = await response.Content.ReadAsStreamAsync();
+                return null;
+            }
+            return null;
+        }
     }
 }

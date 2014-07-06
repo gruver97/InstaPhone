@@ -33,6 +33,7 @@ namespace InstaPhone.ViewModel
                     PopularMedia.Clear();
                     foreach (var media in popularMedia)
                     {
+                        await DownloadImage(media.InstagramImages.LowResolution.Uri);
                         PopularMedia.Add(media);
                     }
                 }
@@ -41,6 +42,11 @@ namespace InstaPhone.ViewModel
             {
                 
             }
+        }
+
+        private async Task DownloadImage(Uri imageUri)
+        {
+            await _instagramClient.DownloadImage(imageUri);
         }
 
         public RelayCommand<RoutedEventArgs> ViewLoadedCommand { get; set; }
