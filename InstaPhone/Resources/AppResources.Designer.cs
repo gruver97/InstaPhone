@@ -106,7 +106,7 @@ namespace InstaPhone.Resources {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to https://api.instagram.com/v1/media/popular?clientId={0}.
+        ///   Looks up a localized string similar to https://api.instagram.com/v1/media/popular?access_token={0}.
         /// </summary>
         public static string PopularMediaUrl {
             get {

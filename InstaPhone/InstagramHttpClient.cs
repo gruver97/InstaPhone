@@ -1,8 +1,12 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Net.Http;
 using System.Net.Http.Headers;
 using System.Threading.Tasks;
+using InstaPhone.Model;
 using InstaPhone.Resources;
+using Newtonsoft.Json;
+using Newtonsoft.Json.Linq;
 
 namespace InstaPhone
 {
@@ -12,11 +16,11 @@ namespace InstaPhone
 
         private static readonly string ResponseUri = AppResources.RedirectUrl;
 
-        private string _accessToken;
+        private static string _accessToken;
 
         public InstagramHttpClient()
         {
-            _accessToken = string.Empty;
+            //_accessToken = string.Empty;
         }
 
         public static Uri AuthUri
@@ -29,7 +33,7 @@ namespace InstaPhone
             if (authResult == null) return false;
             if (authResult.Fragment.Contains("access_token"))
             {
-                _accessToken = authResult.Fragment.Remove(0, "access_token".Length);
+                _accessToken = authResult.Fragment.Remove(0, "#access_token=".Length);
                 return true;
             }
             return false;
@@ -40,12 +44,12 @@ namespace InstaPhone
             DefaultRequestHeaders.Accept.Clear();
             DefaultRequestHeaders.Accept.Add(new MediaTypeWithQualityHeaderValue("application/json"));
             HttpResponseMessage response =
-                await GetAsync(new Uri(string.Format(AppResources.PopularMediaUrl, ClientId)));
+                await GetAsync(new Uri(string.Format(AppResources.PopularMediaUrl, _accessToken)));
             if (response.IsSuccessStatusCode)
             {
-                //string sitesJsonString = await response.Content.ReadAsStringAsync();
-                //var jobject = JObject.Parse(sitesJsonString)["value"];
-                //var siteList = JsonConvert.DeserializeObject<List<Site>>(jobject.ToString());
+                string mediaJsonString = await response.Content.ReadAsStringAsync();
+                var jobject = JObject.Parse(mediaJsonString)["data"];
+                var popularMedias = JsonConvert.DeserializeObject<List<PopularMedia>>(jobject.ToString());
                 //return siteList;
             }
             ;

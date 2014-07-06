@@ -144,6 +144,6 @@
     <value>https://instagram.com/oauth/authorize/?client_id={0}&amp;redirect_uri={1}&amp;response_type=token</value>
   </data>
   <data name="PopularMediaUrl" xml:space="preserve">
-    <value>https://api.instagram.com/v1/media/popular?clientId={0}</value>
+    <value>https://api.instagram.com/v1/media/popular?access_token={0}</value>
   </data>
 </root>

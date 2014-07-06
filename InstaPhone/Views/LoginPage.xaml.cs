@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Windows;
 using System.Windows.Navigation;
+using InstaPhone.Resources;
 using Microsoft.Phone.Controls;
 
 namespace InstaPhone.Views
@@ -22,8 +23,8 @@ namespace InstaPhone.Views
 
         private void WebBrowser_OnNavigationFailed(object sender, NavigationFailedEventArgs e)
         {
-            MessageBox.Show("Повторите попытку позднее");
-            e.Handled = true;
+            //MessageBox.Show("Повторите попытку позднее");
+            //e.Handled = true;
         }
     }
 }
