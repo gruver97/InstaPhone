@@ -12,44 +12,37 @@
   See http://www.galasoft.ch/mvvm
 */
 
-using GalaSoft.MvvmLight;
 using GalaSoft.MvvmLight.Ioc;
-using Microsoft.Practices.ServiceLocation;
 using Microsoft.Practices.Unity;
 
 namespace InstaPhone.ViewModel
 {
     /// <summary>
-    /// This class contains static references to all the view models in the
-    /// application and provides an entry point for the bindings.
+    ///     This class contains static references to all the view models in the
+    ///     application and provides an entry point for the bindings.
     /// </summary>
     public class ViewModelLocator
     {
-        private UnityContainer _container;
+        private readonly UnityContainer _container;
 
         /// <summary>
-        /// Initializes a new instance of the ViewModelLocator class.
+        ///     Initializes a new instance of the ViewModelLocator class.
         /// </summary>
         public ViewModelLocator()
         {
             _container = new UnityContainer();
-
-            ////if (ViewModelBase.IsInDesignModeStatic)
-            ////{
-            ////    // Create design time view services and models
-            ////    SimpleIoc.Default.Register<IDataService, DesignDataService>();
-            ////}
-            ////else
-            ////{
-            ////    // Create run time view services and models
-            ////    SimpleIoc.Default.Register<IDataService, DataService>();
-            ////}
-        //https://instagram.com/oauth/authorize/?client_id=2220fd0b2b9542a6b6483af14302077d&redirect_uri=http://localhost&response_type=token#
-            SimpleIoc.Default.Register<AuthViewModel>();
+            _container.RegisterType<AuthViewModel>();
+            _container.RegisterType<PhotoViewModel>();
         }
 
-        public AuthViewModel AuthViewModel {
+        public AuthViewModel AuthViewModel
+        {
             get { return _container.Resolve<AuthViewModel>(); }
+        }
+
+        public PhotoViewModel PhotoViewModel
+        {
+            get { return _container.Resolve<PhotoViewModel>(); }
         }
 
         public static void Cleanup()

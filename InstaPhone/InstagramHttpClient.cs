@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Net.Http;
 using System.Net.Http.Headers;
 using System.Threading.Tasks;
@@ -18,11 +19,6 @@ namespace InstaPhone
 
         private static string _accessToken;
 
-        public InstagramHttpClient()
-        {
-            //_accessToken = string.Empty;
-        }
-
         public static Uri AuthUri
         {
             get { return new Uri(string.Format(AppResources.AuthUrl, ClientId, ResponseUri)); }
@@ -39,20 +35,25 @@ namespace InstaPhone
             return false;
         }
 
-        public async Task GetPopularPhotosAsync()
+        public async Task<IEnumerable<PopularMedia>> GetPopularPhotosAsync(int count)
         {
+            if (count < 1) throw new ArgumentException("Count must be positive.", "count");
             DefaultRequestHeaders.Accept.Clear();
             DefaultRequestHeaders.Accept.Add(new MediaTypeWithQualityHeaderValue("application/json"));
+            this.CancelPendingRequests();
             HttpResponseMessage response =
                 await GetAsync(new Uri(string.Format(AppResources.PopularMediaUrl, _accessToken)));
             if (response.IsSuccessStatusCode)
             {
                 string mediaJsonString = await response.Content.ReadAsStringAsync();
-                var jobject = JObject.Parse(mediaJsonString)["data"];
-                var popularMedias = JsonConvert.DeserializeObject<List<PopularMedia>>(jobject.ToString());
-                //return siteList;
+                JToken jobject = JObject.Parse(mediaJsonString)["data"];
+                var popularMedia = JsonConvert.DeserializeObject<List<PopularMedia>>(jobject.ToString());
+                return
+                    popularMedia.Where(media => media.MediaType == "image")
+                        .OrderByDescending(media => media.Likes.Count)
+                        .Take(count).ToList();
             }
-            ;
+            return null;
         }
     }
 }
