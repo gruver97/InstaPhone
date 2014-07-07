@@ -6,6 +6,6 @@ namespace InstaPhone
 {
     public interface ICollage
     {
-        void MakeCollage(ref Image collage, int width, int height, IEnumerable<BitmapImage> imagesParam);
+        void MakeCollage(ref Image collage, int collageWidth, int collageHeight, IEnumerable<BitmapImage> imagesParam);
     }
 }
