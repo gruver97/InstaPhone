@@ -23,29 +23,45 @@
     </i:Interaction.Triggers>
     <phone:PhoneApplicationPage.ApplicationBar>
         <shell:ApplicationBar IsMenuEnabled="True" IsVisible="True">
-            <shell:ApplicationBarIconButton IconUri="Refresh" Text="Обновить" Click="ApplicationBarIconButton_OnClick" />
+            <shell:ApplicationBarIconButton Click="ApplicationBarIconButton_OnClick"
+                                            IconUri="Refresh"
+                                            Text="Обновить" />
             <shell:ApplicationBarIconButton IconUri="Refresh"
-                                            IsEnabled="False"
-                                            Text="Коллаж" />
+                                            Text="Коллаж" Click="CollageButton_OnClick" />
         </shell:ApplicationBar>
     </phone:PhoneApplicationPage.ApplicationBar>
     <!--  LayoutRoot contains the root grid where all other page content is placed  -->
     <Grid x:Name="LayoutRoot">
         <phone:Pivot>
             <phone:PivotItem Header="Популярные">
-                <ListBox HorizontalAlignment="Center" ItemsSource="{Binding Path=PopularMedia}">
-                    <ListBox.ItemTemplate>
-                        <DataTemplate>
-                            <StackPanel>
-                                <Image Width="306"
-                                       Height="306"
-                                       Margin="10"
-                                       Source="{Binding Path=InstagramImages.LowResolution.Image}"
-                                       Stretch="UniformToFill" />
-                            </StackPanel>
-                        </DataTemplate>
-                    </ListBox.ItemTemplate>
-                </ListBox>
+                <Grid>
+                    <Grid.RowDefinitions>
+                        <RowDefinition Height="Auto"></RowDefinition>
+                        <RowDefinition Height="Auto"></RowDefinition>
+                    </Grid.RowDefinitions>
+                    <ListBox
+                        Grid.Row="1"
+                        HorizontalAlignment="Center" ItemsSource="{Binding Path=PopularMedia}">
+                        <ListBox.ItemTemplate>
+                            <DataTemplate>
+                                <StackPanel>
+                                    <Image Width="306"
+                                           Height="306"
+                                           Margin="10"
+                                           Source="{Binding Path=InstagramImages.LowResolution.Image}"
+                                           Stretch="UniformToFill" />
+                                </StackPanel>
+                            </DataTemplate>
+                        </ListBox.ItemTemplate>
+                    </ListBox>
+                    <Image
+                        Grid.Row="0"
+                        Name="ImageCollage"
+                           Width="400"
+                           Height="306"
+                           Margin="5,0,10,10"
+                           Source="{Binding Path=ImageCollage}"
+                           Stretch="None"/></Grid>
             </phone:PivotItem>
         </phone:Pivot>
     </Grid>
