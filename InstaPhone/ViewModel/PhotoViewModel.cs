@@ -6,7 +6,6 @@ using System.Linq;
 using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Controls;
-using System.Windows.Media.Imaging;
 using GalaSoft.MvvmLight;
 using GalaSoft.MvvmLight.Command;
 using InstaPhone.Model;
@@ -35,24 +34,25 @@ namespace InstaPhone.ViewModel
 
         private async Task GetMostPopularPhotos()
         {
-            try
+            var instagramClient = new InstagramHttpClient();
+            IEnumerable<PopularMedia> popularMedia = await instagramClient.GetPopularPhotosAsync(PhotoCount);
+            if (popularMedia != null)
             {
-                var instagramClient = new InstagramHttpClient();
-                IEnumerable<PopularMedia> popularMedia = await instagramClient.GetPopularPhotosAsync(PhotoCount);
-                if (popularMedia != null)
+                PopularMedia.Clear();
+                foreach (PopularMedia media in popularMedia)
                 {
-                    PopularMedia.Clear();
-                    foreach (PopularMedia media in popularMedia)
-                    {
-                        Stream imageStream = await DownloadImage(media.InstagramImages.LowResolution.Uri);
-                        media.InstagramImages.LowResolution.SetImage(imageStream);
-                        PopularMedia.Add(media);
-                    }
+                    Stream imageStream = await DownloadImage(media.InstagramImages.LowResolution.Uri);
+                    media.InstagramImages.LowResolution.SetImage(imageStream);
+                    PopularMedia.Add(media);
                 }
             }
-            catch (Exception exception)
-            {
-            }
+        }
+
+        public void MakeCollage(ref Image collage)
+        {
+            var collageWorker = new Collage();
+            collageWorker.MakeCollage(ref collage, 420, 420,
+                PopularMedia.Select(media => media.InstagramImages.LowResolution.Image));
         }
 
         public async Task RefreshPopular()
@@ -63,12 +63,6 @@ namespace InstaPhone.ViewModel
         private async void ViewLoadedCommandExecute(RoutedEventArgs eventArgs)
         {
             await GetMostPopularPhotos();
-        }
-
-        public void MakeCollage(ref Image collage)
-        {
-            var collageWorker = new Collage();
-            collageWorker.MakeCollage(ref collage, 420, 420, PopularMedia.Select(media=>media.InstagramImages.LowResolution.Image));
         }
     }
 }

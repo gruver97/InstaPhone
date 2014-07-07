@@ -1,13 +1,6 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.IO;
-using System.Linq;
+using System.Threading.Tasks;
 using System.Windows;
-using System.Windows.Controls;
-using System.Windows.Media;
-using System.Windows.Media.Imaging;
-using System.Windows.Resources;
-using InstaPhone.Model;
 using InstaPhone.ViewModel;
 using Microsoft.Phone.Controls;
 
@@ -22,20 +15,22 @@ namespace InstaPhone.Views
 
         private async void ApplicationBarIconButton_OnClick(object sender, EventArgs e)
         {
-            if (DataContext is PhotoViewModel)
-            {
-                var viewModel = DataContext as PhotoViewModel;
-                await viewModel.RefreshPopular();
-            }
+            await LoadeAndCollageAsync();
         }
 
-        private void CollageButton_OnClick(object sender, EventArgs e)
+        private async Task LoadeAndCollageAsync()
         {
             if (DataContext is PhotoViewModel)
             {
                 var viewModel = DataContext as PhotoViewModel;
+                await viewModel.RefreshPopular();
                 viewModel.MakeCollage(ref ImageCollage);
             }
+        }
+
+        private async void PhotoPage_OnLoaded(object sender, RoutedEventArgs e)
+        {
+            await LoadeAndCollageAsync();
         }
     }
 }

@@ -2,68 +2,45 @@
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
-using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Media;
 using System.Windows.Media.Imaging;
-using System.Windows.Resources;
 
 namespace InstaPhone
 {
     public class Collage : ICollage
     {
-        public void MakeCollage(ref Image collage, int collageWidth, int collageHeight, IEnumerable<BitmapImage> imagesParam)
+        public void MakeCollage(ref Image collage, int collageWidth, int collageHeight,
+            IEnumerable<BitmapImage> imagesParam)
         {
-            try
+            IList<BitmapImage> sourceImages = imagesParam as IList<BitmapImage> ?? imagesParam.ToList();
+            var number = (int) Math.Ceiling(Math.Sqrt(sourceImages.Count));
+            int width = collageWidth/number;
+            int height = collageHeight/number;
+
+            var wbFinal = new WriteableBitmap(collageWidth, collageHeight);
+
+            using (var memoryStream = new MemoryStream())
             {
-                var bitmapImages = imagesParam as IList<BitmapImage> ?? imagesParam.ToList();
-                var number = (int) Math.Ceiling(Math.Sqrt(bitmapImages.Count));
-                var width = (int) (collageWidth/number);
-                var height = (int)(collageHeight / number);
-                
-                int tempWidth = 0; // Parameter for Translate.X 
-                int tempHeight = 0; // Parameter for Translate.Y
-
-                var wbFinal = new WriteableBitmap(collageWidth, collageHeight);
-
-                using (var mem = new MemoryStream())
+                for (int column = 0; column < number; column++)
                 {
-                    foreach (BitmapImage bitmapImage in bitmapImages.Take(2))
+                    for (int row = 0; row < number; row++)
                     {
-                        var wb = new WriteableBitmap(bitmapImage);
+                        var itemNumber = column*2 + row;
+                        if (itemNumber >= sourceImages.Count) continue;
+                        var wb = new WriteableBitmap(sourceImages[itemNumber]);
                         wb = wb.Resize(width, height, WriteableBitmapExtensions.Interpolation.Bilinear);
                         var image = new Image {Source = wb};
-
-                        var transform = new TranslateTransform {X = tempWidth, Y = tempHeight};
+                        var transform = new TranslateTransform {X = row*width, Y = column*height};
                         wbFinal.Render(image, transform);
-                        tempWidth += wb.PixelWidth;
                     }
-                    tempWidth = 0;
-                    tempHeight = height;
-                    foreach (BitmapImage bitmapImage in bitmapImages.Skip(2))
-                    {
-                        var wb = new WriteableBitmap(bitmapImage);
-                        wb = wb.Resize(width, height, WriteableBitmapExtensions.Interpolation.Bilinear);
-                        var image = new Image {Source = wb};
-
-                        var transform = new TranslateTransform {X = tempWidth, Y = tempHeight};
-                        wbFinal.Render(image, transform);
-                        tempWidth += wb.PixelWidth;
-                    }
-                    wbFinal.Invalidate();
-                    wbFinal.SaveJpeg(mem, collageWidth, collageHeight, 0, 100);
-                    mem.Seek(0, SeekOrigin.Begin);
-
-                    collage.Source = wbFinal;
-
-                };
+                }
+                wbFinal.Invalidate();
+                wbFinal.SaveJpeg(memoryStream, collageWidth, collageHeight, 0, 100);
+                memoryStream.Seek(0, SeekOrigin.Begin); 
+                collage.Source = wbFinal;
             }
-
-            catch (Exception)
-            {
-            }
-
-
         }
     }
 }
+

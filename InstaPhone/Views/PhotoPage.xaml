@@ -12,23 +12,17 @@
                             FontFamily="{StaticResource PhoneFontFamilyNormal}"
                             FontSize="{StaticResource PhoneFontSizeNormal}"
                             Foreground="{StaticResource PhoneForegroundBrush}"
+                            Loaded="PhotoPage_OnLoaded"
                             Orientation="Portrait"
                             SupportedOrientations="Portrait"
                             shell:SystemTray.IsVisible="False"
                             mc:Ignorable="d">
-    <i:Interaction.Triggers>
-        <i:EventTrigger EventName="Loaded">
-            <i:InvokeCommandAction Command="{Binding Path=ViewLoadedCommand, Mode=TwoWay}" />
-        </i:EventTrigger>
-    </i:Interaction.Triggers>
+
     <phone:PhoneApplicationPage.ApplicationBar>
         <shell:ApplicationBar IsMenuEnabled="True" IsVisible="True">
-            <shell:ApplicationBarIconButton Click="ApplicationBarIconButton_OnClick"
-                                            IconUri="Refresh"
-                                            Text="Обновить" />
-            <shell:ApplicationBarIconButton Click="CollageButton_OnClick"
-                                            IconUri="Refresh"
-                                            Text="Коллаж" />
+            <shell:ApplicationBar.MenuItems>
+                <shell:ApplicationBarMenuItem Click="ApplicationBarIconButton_OnClick" Text="Обновить" />
+            </shell:ApplicationBar.MenuItems>
         </shell:ApplicationBar>
     </phone:PhoneApplicationPage.ApplicationBar>
     <!--  LayoutRoot contains the root grid where all other page content is placed  -->
