@@ -16,8 +16,6 @@ namespace InstaPhone
         {
             try
             {
-                var imageStreams = new List<Stream>();
-
                 int tempWidth = 0; // Parameter for Translate.X 
                 int tempHeight = 0; // Parameter for Translate.Y 
                 var images = new List<BitmapImage>();
@@ -35,8 +33,6 @@ namespace InstaPhone
                         var wb = new WriteableBitmap(bitmapImage);
                         wb = wb.Resize(50, 50, WriteableBitmapExtensions.Interpolation.Bilinear);
                         var image = new Image();
-                        //image.Height = bitmapImage.PixelHeight;
-                        //image.Width = bitmapImage.PixelWidth;
                         image.Source = wb;
 
                         var transform = new TranslateTransform();
@@ -46,7 +42,7 @@ namespace InstaPhone
                         tempWidth += wb.PixelWidth;
                     }
                     tempWidth = 0;
-                    tempHeight = 306;
+                    tempHeight = 50;
                     foreach (BitmapImage bitmapImage in bitmapImages.Skip(2))
                     {
                         var wb = new WriteableBitmap(bitmapImage);
@@ -60,7 +56,7 @@ namespace InstaPhone
                         transform.X = tempWidth;
                         transform.Y = tempHeight;
                         wbFinal.Render(image, transform);
-                        tempHeight += wb.PixelHeight;
+                        tempWidth += wb.PixelWidth;
                     }
                     wbFinal.Invalidate();
                     wbFinal.SaveJpeg(mem, width, height, 0, 100);
