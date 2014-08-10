@@ -17,7 +17,6 @@
                             SupportedOrientations="Portrait"
                             shell:SystemTray.IsVisible="False"
                             mc:Ignorable="d">
-
     <phone:PhoneApplicationPage.ApplicationBar>
         <shell:ApplicationBar IsMenuEnabled="True" IsVisible="True">
             <shell:ApplicationBar.MenuItems>
@@ -27,6 +26,11 @@
     </phone:PhoneApplicationPage.ApplicationBar>
     <!--  LayoutRoot contains the root grid where all other page content is placed  -->
     <Grid x:Name="LayoutRoot">
+        <ProgressBar IsEnabled="True"
+                     IsIndeterminate="True"
+                     Visibility="{Binding Path=IsLoading,
+                                          Mode=OneWay,
+                                          Converter={StaticResource BoolToVisibilityConverter}}" />
         <phone:Pivot>
             <phone:PivotItem Header="Популярные">
                 <ListBox HorizontalAlignment="Center" ItemsSource="{Binding Path=PopularMedia}">

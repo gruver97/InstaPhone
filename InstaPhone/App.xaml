@@ -5,6 +5,7 @@
              xmlns:d1p1="http://schemas.openxmlformats.org/markup-compatibility/2006"
              xmlns:phone="clr-namespace:Microsoft.Phone.Controls;assembly=Microsoft.Phone"
              xmlns:shell="clr-namespace:Microsoft.Phone.Shell;assembly=Microsoft.Phone"
+             xmlns:instaPhone="clr-namespace:InstaPhone"
              d1p1:Ignorable="d">
     <!--  Application Resources  -->
     <Application.Resources>
@@ -12,6 +13,7 @@
         <vm:ViewModelLocator xmlns:vm="clr-namespace:InstaPhone.ViewModel"
                              x:Key="Locator"
                              d:IsDataSource="True" />
+        <instaPhone:BoolToVisibilityConverter x:Name="BoolToVisibilityConverter"/>
     </Application.Resources>
     <Application.ApplicationLifetimeObjects>
         <!--  Required object that handles lifetime events for the application  -->

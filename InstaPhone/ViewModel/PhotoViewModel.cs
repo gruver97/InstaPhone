@@ -14,6 +14,7 @@ namespace InstaPhone.ViewModel
 {
     public class PhotoViewModel : ViewModelBase
     {
+        private bool _isLoading;
         private const int PhotoCount = 4;
 
         public PhotoViewModel()
@@ -34,17 +35,25 @@ namespace InstaPhone.ViewModel
 
         private async Task GetMostPopularPhotos()
         {
-            var instagramClient = new InstagramHttpClient();
-            IEnumerable<PopularMedia> popularMedia = await instagramClient.GetPopularPhotosAsync(PhotoCount);
-            if (popularMedia != null)
+            IsLoading = true;
+            try
             {
-                PopularMedia.Clear();
-                foreach (PopularMedia media in popularMedia)
+                var instagramClient = new InstagramHttpClient();
+                IEnumerable<PopularMedia> popularMedia = await instagramClient.GetPopularPhotosAsync(PhotoCount);
+                if (popularMedia != null)
                 {
-                    Stream imageStream = await DownloadImage(media.InstagramImages.LowResolution.Uri);
-                    media.InstagramImages.LowResolution.SetImage(imageStream);
-                    PopularMedia.Add(media);
+                    PopularMedia.Clear();
+                    foreach (PopularMedia media in popularMedia)
+                    {
+                        Stream imageStream = await DownloadImage(media.InstagramImages.LowResolution.Uri);
+                        media.InstagramImages.LowResolution.SetImage(imageStream);
+                        PopularMedia.Add(media);
+                    }
                 }
+            }
+            finally
+            {
+                IsLoading = false;
             }
         }
 
@@ -63,6 +72,17 @@ namespace InstaPhone.ViewModel
         private async void ViewLoadedCommandExecute(RoutedEventArgs eventArgs)
         {
             await GetMostPopularPhotos();
+        }
+
+        public bool IsLoading
+        {
+            get { return _isLoading; }
+            set
+            {
+                if (Equals(_isLoading, value)) return;
+                _isLoading = value;
+                RaisePropertyChanged(() => IsLoading);
+            }
         }
     }
 }

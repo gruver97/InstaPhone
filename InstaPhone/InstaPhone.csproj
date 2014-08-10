@@ -96,6 +96,7 @@
     <Compile Include="App.xaml.cs">
       <DependentUpon>App.xaml</DependentUpon>
     </Compile>
+    <Compile Include="BoolToVisibilityConverter.cs" />
     <Compile Include="Collage.cs" />
     <Compile Include="ICollage.cs" />
     <Compile Include="IInstagramClient.cs" />
